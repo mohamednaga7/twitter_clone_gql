@@ -6,7 +6,6 @@ export const usersSchema = gql`
     name: String!
     email: String!
     username: String!
-    password: String!
     profileImageUrl: String
     createdAt: String!
     updatedAt: String!
@@ -24,7 +23,20 @@ export const usersSchema = gql`
     users: [User]!
   }
 
+  input SignUpData {
+    name: String!
+    email: String!
+    username: String!
+    password: String!
+  }
+
+  type AuthResponse {
+    user: User!
+    token: String!
+  }
+
   type Mutation {
-    addUser(id: Int!): String
+    signUp(userData: SignUpData): AuthResponse!
+    signIn(emailOrUsername: String!, password: String!): AuthResponse!
   }
 `;
