@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  username        String    @unique
+  password        String
+  profileImageUrl String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  tweets          Tweet[]
+  comments        Comment[]
+  likes           Like[]
+  followedBy      Follows[] @relation("follower")
+  following       Follows[] @relation("following")
+
+  @@map("users")
+}
+
+model Tweet {
+  id        String    @id @default(cuid())
+  text      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  likes     Like[]
+
+  @@map("tweets")
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  text      String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  tweetId   String
+  tweet     Tweet     @relation(fields: [tweetId], references: [id])
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tweetId   String
+  tweet     Tweet    @relation(fields: [tweetId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("likes")
+}
+
+model Follows {
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId String
+  createdAt   DateTime @default(now())
+
+  @@id([followerId, followingId])
+}
