@@ -3,7 +3,9 @@ import { ApolloServerPluginDrainHttpServer, gql } from "apollo-server-core";
 import express from "express";
 import http from "http";
 import dotenv from "dotenv";
-dotenv.config();
+if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
+  dotenv.config();
+}
 import { resolvers } from "./graphql/resolvers";
 import schemas from "./graphql/schemas";
 

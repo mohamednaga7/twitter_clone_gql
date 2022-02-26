@@ -9,7 +9,6 @@ export const signUp = async (
   _: any,
   { userData: { email, name, password, username } }: { userData: SignUpDTO }
 ) => {
-  console.log(email, name, password, username);
   if (!email || !name || !password || !username) {
     throw new UserInputError("incomplete data sent");
   }
