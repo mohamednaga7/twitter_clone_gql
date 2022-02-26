@@ -2,6 +2,8 @@ import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer, gql } from "apollo-server-core";
 import express from "express";
 import http from "http";
+import dotenv from "dotenv";
+dotenv.config();
 import { resolvers } from "./graphql/resolvers";
 import schemas from "./graphql/schemas";
 
@@ -13,6 +15,7 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     typeDefs: schemas,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    context: ({ req }) => ({ authToken: req.headers.authorization }),
   });
   await server.start();
   server.applyMiddleware({ app });

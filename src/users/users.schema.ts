@@ -18,7 +18,7 @@ export const usersSchema = gql`
   }
 
   type Query {
-    me: User
+    currentUser: User
     user(id: ID!): User
     users: [User]!
   }
