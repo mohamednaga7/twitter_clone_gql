@@ -23,8 +23,8 @@ model User {
   tweets          Tweet[]
   comments        Comment[]
   likes           Like[]
-  followedBy      Follows[] @relation("follower")
-  following       Follows[] @relation("following")
+  followedBy      User[]    @relation("UserFollows", references: [id])
+  following       User[]    @relation("UserFollows", references: [id])
 
   @@map("users")
 }
@@ -68,12 +68,12 @@ model Like {
   @@map("likes")
 }
 
-model Follows {
-  follower    User     @relation("follower", fields: [followerId], references: [id])
-  followerId  String
-  following   User     @relation("following", fields: [followingId], references: [id])
-  followingId String
-  createdAt   DateTime @default(now())
+// model Follows {
+//   follower    User     @relation("follower", fields: [followerId], references: [id])
+//   followerId  String
+//   following   User     @relation("following", fields: [followingId], references: [id])
+//   followingId String
+//   createdAt   DateTime @default(now())
 
-  @@id([followerId, followingId])
-}
+//   @@id([followerId, followingId])
+// }
