@@ -1,15 +1,27 @@
-import { isAuth } from "./../../middleware/isAuth";
-import { DbClient } from "./../../db/DbClient";
-import { ForbiddenError } from "apollo-server-core";
+import { isAuth } from './../../middleware/isAuth';
+import { DbClient } from './../../db/DbClient';
+import { ForbiddenError } from 'apollo-server-core';
 
 export const currentUser = async (
   _parent: any,
   _args: any,
   { authToken }: any
 ) => {
-  if (!authToken) throw new ForbiddenError("You are not logged in");
+  if (!authToken) throw new ForbiddenError('You are not logged in');
 
   const user = await isAuth(authToken);
 
-  return { ...user, password: undefined };
+  if (!user) {
+    throw new ForbiddenError('You are not logged in');
+  }
+  const dbUser = await DbClient.instance.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    include: {
+      followedBy: true,
+      following: true,
+    },
+  });
+  return dbUser;
 };

@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const usersSchema = gql`
   type User {
@@ -38,5 +38,7 @@ export const usersSchema = gql`
   type Mutation {
     signUp(userData: SignUpData): AuthResponse!
     signIn(emailOrUsername: String!, password: String!): AuthResponse!
+    followUser(userId: ID!): User
+    unFollowUser(userId: ID!): User
   }
 `;
