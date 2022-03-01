@@ -1,6 +1,11 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const tweetsSchema = gql`
+  type Tweet_Count {
+    likes: Int
+    comments: Int
+  }
+
   type Tweet {
     id: ID!
     text: String!
@@ -11,6 +16,7 @@ export const tweetsSchema = gql`
     user: User!
     comments: [Comment]!
     likes: [Like]!
+    _count: Tweet_Count
   }
 
   type Like {
@@ -23,17 +29,12 @@ export const tweetsSchema = gql`
   }
 
   type Query {
-    tweets: [Tweet!]!
-    tweet(id: ID!): Tweet!
-  }
-
-  input NewTweet {
-    text: String!
-    userId: String!
+    tweets: [Tweet]!
+    tweet(tweetId: ID!): Tweet!
   }
 
   type Mutation {
-    addTweet(input: NewTweet!): Tweet!
+    addTweet(text: String!): Tweet!
     editTweet(tweetId: String!, text: String!): Tweet!
     deleteTweet(tweetId: String!): Tweet!
 
