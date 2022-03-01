@@ -1,3 +1,4 @@
+import { IAppContext } from './../shared/app.types';
 import { AuthTokenPayload } from './../auth/auth.types';
 import { isAuth } from './../middleware/isAuth';
 import { DbClient } from './../db/DbClient';
@@ -11,7 +12,7 @@ const users = async () => {
 const followUser = async (
   _parent: any,
   { userId }: { userId: string },
-  { authToken }: { authToken: string }
+  { authToken }: IAppContext
 ) => {
   if (!authToken) throw new ForbiddenError('You are not logged in');
   const { id, username, email } = (await isAuth(authToken)) as AuthTokenPayload;
@@ -31,7 +32,7 @@ const followUser = async (
 const unFollowUser = async (
   _parent: any,
   { userId }: { userId: string },
-  { authToken }: { authToken: string }
+  { authToken }: IAppContext
 ) => {
   if (!authToken) throw new ForbiddenError('You are not logged in');
   const { id, username, email } = (await isAuth(authToken)) as AuthTokenPayload;
