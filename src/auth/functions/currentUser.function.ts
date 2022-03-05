@@ -2,11 +2,14 @@ import { IAppContext } from './../../shared/app.types';
 import { isAuth } from './../../middleware/isAuth';
 import { DbClient } from './../../db/DbClient';
 import { ForbiddenError } from 'apollo-server-core';
+import { fieldsToQuery } from '../../shared/fieldsToQuery';
+import graphqlFields from 'graphql-fields';
 
 export const currentUser = async (
   _parent: any,
   _args: any,
-  { authToken }: IAppContext
+  { authToken }: IAppContext,
+  info: any
 ) => {
   if (!authToken) throw new ForbiddenError('You are not logged in');
 
@@ -15,14 +18,13 @@ export const currentUser = async (
   if (!user) {
     throw new ForbiddenError('You are not logged in');
   }
+
+  const fields = graphqlFields(info);
   const dbUser = await DbClient.instance.user.findUnique({
     where: {
       id: user.id,
     },
-    include: {
-      followedBy: true,
-      following: true,
-    },
+    ...fieldsToQuery(fields),
   });
   return dbUser;
 };
