@@ -4,9 +4,9 @@ import { DbClient } from './../../db/DbClient';
 import { fieldsToQuery } from '../../shared/fieldsToQuery';
 
 export const getTweets = async (
-  parent: any,
-  args: any,
-  context: any,
+  _parent: any,
+  _args: any,
+  _context: any,
   info: any
 ) => {
   const fields = graphQlFields(info);
