@@ -21,14 +21,17 @@ export const deleteTweet = async (
   if (currentUser.id !== tweet.userId)
     throw new ForbiddenError('you are unauthorized to edit this tweet');
 
-  const deletedTweet = await DbClient.instance.tweet.delete({
+  const deletedTweet = await DbClient.instance.tweet.update({
     where: {
       id: tweetId,
+    },
+    data: {
+      deletedAt: new Date(),
     },
     include: { user: true },
   });
 
-  if (!deletedTweet) throw new ApolloError('Error Updating the tweet', '500');
+  if (!deletedTweet) throw new ApolloError('Error Deleting the tweet', '500');
   socket.emit('tweetDeleted', { tweet: deletedTweet });
   return deletedTweet;
 };

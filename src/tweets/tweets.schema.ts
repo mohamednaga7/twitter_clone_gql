@@ -38,6 +38,6 @@ export const tweetsSchema = gql`
     editTweet(tweetId: String!, text: String!): Tweet!
     deleteTweet(tweetId: String!): Tweet!
 
-    toggleLikeTweet(tweetId: String!): String
+    toggleLikeTweet(tweetId: String!): Tweet!
   }
 `;

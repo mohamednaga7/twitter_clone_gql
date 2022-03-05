@@ -3,6 +3,7 @@ import { getTweets } from './functions/getTweets.function';
 import { editTweet } from './functions/editTweet.function';
 import { addTweet } from './functions/addTweet.function';
 import { deleteTweet } from './functions/deleteTweet.function';
+import { toggleLikeTweet } from './functions/likeTweet.function';
 
 export default {
   Query: {
@@ -13,5 +14,6 @@ export default {
     addTweet,
     editTweet,
     deleteTweet,
+    toggleLikeTweet,
   },
 };

@@ -1,15 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-export class DbClient extends PrismaClient {
-  private static _instance: DbClient;
-
-  private constructor() {
-    super();
-  }
+export class DbClient {
+  private static _instance: PrismaClient;
 
   public static get instance() {
     if (!this._instance) {
-      this._instance = new DbClient();
+      this._instance = new PrismaClient();
     }
     return this._instance;
   }

@@ -4,14 +4,22 @@ export const getTweetById = async (
   _parent: any,
   { tweetId }: { tweetId: string }
 ) => {
-  const tweet = await DbClient.instance.tweet.findUnique({
+  const tweet = await DbClient.instance.tweet.findFirst({
     where: {
-      id: tweetId,
+      AND: [{ id: tweetId }, { deletedAt: null }],
     },
     include: {
       user: true,
-      likes: true,
-      comments: true,
+      likes: {
+        include: {
+          user: true,
+        },
+      },
+      comments: {
+        include: {
+          user: true,
+        },
+      },
       _count: {
         select: {
           comments: true,

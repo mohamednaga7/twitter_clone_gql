@@ -3,10 +3,9 @@ import { DbClient } from './../../db/DbClient';
 import { isAuth } from './../../middleware/isAuth';
 import { ApolloError } from 'apollo-server-core';
 import { IAppContext } from './../../shared/app.types';
-import { EditTweetDTO } from './../tweets.types';
-export const editTweet = async (
+export const toggleLikeTweet = async (
   _parent: any,
-  { tweetId, text }: EditTweetDTO,
+  { tweetId }: { tweetId: string },
   { authToken, socket }: IAppContext
 ) => {
   const currentUser = await isAuth(authToken);
@@ -19,15 +18,28 @@ export const editTweet = async (
 
   if (!tweet) throw new ApolloError('Tweet Not Found', '404');
 
-  if (currentUser.id !== tweet.userId)
-    throw new ForbiddenError('you are unauthorized to edit this tweet');
+  const like = await DbClient.instance.like.findFirst({
+    where: {
+      AND: [{ userId: currentUser.id }, { tweetId: tweet.id }],
+    },
+  });
 
   const updatedTweet = await DbClient.instance.tweet.update({
     where: {
       id: tweetId,
     },
     data: {
-      text: text,
+      likes: like
+        ? {
+            delete: {
+              id: like.id,
+            },
+          }
+        : {
+            create: {
+              userId: currentUser.id,
+            },
+          },
     },
     include: { user: true },
   });
