@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const commentsSchema = gql`
   type Comment {
@@ -19,8 +19,8 @@ export const commentsSchema = gql`
   }
 
   type Mutation {
-    addComment(tweetId: String!): Comment!
-    editComment(commentId: String!): Comment!
-    deleteComment(commentId: String!): String!
+    addComment(tweetId: String!, text: String!): Comment!
+    editComment(commentId: String!, text: String!): Comment!
+    deleteComment(commentId: String!): Comment!
   }
 `;
