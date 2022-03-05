@@ -10,12 +10,11 @@ export const getTweets = async (
   info: any
 ) => {
   const fields = graphQlFields(info);
-  const query = fieldsToQuery(fields);
   const tweets = await DbClient.instance.tweet.findMany({
     where: {
       deletedAt: null,
     },
-    ...query,
+    ...fieldsToQuery(fields),
     orderBy: {
       createdAt: 'desc',
     },

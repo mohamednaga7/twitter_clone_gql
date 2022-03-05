@@ -4,10 +4,13 @@ import { isAuth } from './../../middleware/isAuth';
 import { ApolloError } from 'apollo-server-core';
 import { IAppContext } from './../../shared/app.types';
 import { EditTweetDTO } from './../tweets.types';
+import graphqlFields from 'graphql-fields';
+import { fieldsToQuery } from '../../shared/fieldsToQuery';
 export const editTweet = async (
   _parent: any,
   { tweetId, text }: EditTweetDTO,
-  { authToken, socket }: IAppContext
+  { authToken, socket }: IAppContext,
+  info: any
 ) => {
   const currentUser = await isAuth(authToken);
 
@@ -15,9 +18,14 @@ export const editTweet = async (
     where: {
       AND: [{ id: tweetId }, { deletedAt: null }],
     },
+    select: {
+      userId: true,
+    },
   });
 
   if (!tweet) throw new ApolloError('Tweet Not Found', '404');
+
+  const fields = graphqlFields(info);
 
   if (currentUser.id !== tweet.userId)
     throw new ForbiddenError('you are unauthorized to edit this tweet');
@@ -29,7 +37,7 @@ export const editTweet = async (
     data: {
       text: text,
     },
-    include: { user: true },
+    ...fieldsToQuery(fields),
   });
 
   if (!updatedTweet) throw new ApolloError('Error Updating the tweet', '500');

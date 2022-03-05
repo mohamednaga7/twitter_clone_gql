@@ -3,10 +3,13 @@ import { DbClient } from './../../db/DbClient';
 import { isAuth } from './../../middleware/isAuth';
 import { ApolloError } from 'apollo-server-core';
 import { IAppContext } from './../../shared/app.types';
+import graphqlFields from 'graphql-fields';
+import { fieldsToQuery } from '../../shared/fieldsToQuery';
 export const deleteTweet = async (
   _parent: any,
   { tweetId }: { tweetId: string },
-  { authToken, socket }: IAppContext
+  { authToken, socket }: IAppContext,
+  info: any
 ) => {
   const currentUser = await isAuth(authToken);
 
@@ -21,6 +24,8 @@ export const deleteTweet = async (
   if (currentUser.id !== tweet.userId)
     throw new ForbiddenError('you are unauthorized to edit this tweet');
 
+  const fields = graphqlFields(info);
+
   const deletedTweet = await DbClient.instance.tweet.update({
     where: {
       id: tweetId,
@@ -28,7 +33,7 @@ export const deleteTweet = async (
     data: {
       deletedAt: new Date(),
     },
-    include: { user: true },
+    ...fieldsToQuery(fields),
   });
 
   if (!deletedTweet) throw new ApolloError('Error Deleting the tweet', '500');
