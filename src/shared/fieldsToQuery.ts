@@ -24,6 +24,5 @@ export function fieldsToQuery(fieldsObject: any): { select: {} } {
     }
   });
 
-  console.log(queryObject);
   return queryObject;
 }
