@@ -14,4 +14,4 @@ RUN yarn build
 
 EXPOSE 4000
 
-CMD ["pm2-runtime", "npm", "--", "start"]
+CMD ["pm2-runtime", "npm", "--", "start", "-i", "max"]
