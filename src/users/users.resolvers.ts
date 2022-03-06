@@ -1,14 +1,12 @@
-import { getAllUsers } from './users.model';
 import { followUser } from './functions/followUser';
+import { getAllUsers } from './functions/getAllUsers';
+import { getUserById } from './functions/getUserById';
 import { unFollowUser } from './functions/unfollowUser';
-
-const users = async () => {
-  return await getAllUsers();
-};
 
 export default {
   Query: {
-    users,
+    users: getAllUsers,
+    user: getUserById,
   },
   Mutation: {
     followUser,

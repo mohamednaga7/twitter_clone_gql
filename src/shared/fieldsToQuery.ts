@@ -1,6 +1,7 @@
 const manyFields = ['users', 'comments', 'tweets', 'following', 'followedBy'];
+const userTypes = ['users', 'user', 'following', 'followedBy'];
 
-export function fieldsToQuery(fieldsObject: any): {} {
+export function fieldsToQuery(fieldsObject: any): { select: {} } {
   const queryObject: {
     select: any;
   } = {
@@ -16,9 +17,13 @@ export function fieldsToQuery(fieldsObject: any): {} {
         if (manyFields.includes(field)) {
           queryObject.select[field].where = { deletedAt: null };
         }
+        if (userTypes.includes(field)) {
+          queryObject.select[field].select.password = false;
+        }
       }
     }
   });
 
+  console.log(queryObject);
   return queryObject;
 }
