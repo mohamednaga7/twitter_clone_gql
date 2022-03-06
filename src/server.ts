@@ -5,10 +5,6 @@ import { ApolloServerPluginDrainHttpServer, gql } from 'apollo-server-core';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import dotenv from 'dotenv';
-if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-  dotenv.config();
-}
 import { resolvers } from './graphql/resolvers';
 import schemas from './graphql/schemas';
 
